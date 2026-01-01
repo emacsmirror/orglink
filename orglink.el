@@ -275,5 +275,6 @@ On the links the following commands are available:
 (provide 'orglink)
 ;; Local Variables:
 ;; indent-tabs-mode: nil
+;; lisp-indent-local-overrides: ((cond . 0) (interactive . 0))
 ;; End:
 ;;; orglink.el ends here
