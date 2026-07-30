@@ -165,10 +165,16 @@ On the links the following commands are available:
          (orglink-mode 1))))
 
 (defun orglink-unfontify-region (beg end)
-  (org-unfontify-region beg end)
-  ;; The above does not remove the following properties.
-  ;; TODO Should it? Should we? Ask on mailing-list.
-  (remove-text-properties beg end '(help-echo t rear-nonsticky t)))
+  ;; Like `org-unfontify-region' but do not remove syntax-table
+  ;; because of #17 and also remove help-echo and rear-nonsticky.
+  (font-lock-default-unfontify-region beg end)
+  (with-silent-modifications
+    (decompose-region beg end)
+    (remove-text-properties beg end '( mouse-face t keymap t org-linked-text t
+			               invisible t intangible t org-emphasis t
+                                       help-echo t rear-nonsticky t))
+    (org-fold-core-update-optimization beg end)
+    (org-remove-font-lock-display-properties beg end)))
 
 ;; Modified copy of `org-activate-links'.
 ;; The modified part is clearly marked.
